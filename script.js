@@ -42,12 +42,13 @@ function rewrite_ng_comment(comment_list) {
 function erase_ng_comment(comment_list) {
     for (let i=0; i < comment_list.length; i++) {
         let comment =  comment_list[i].innerHTML
-        if (comment.match(ngword)){
+        if (comment.match(ngwords)) {
             // NGワードを含んだコメントの祖先要素を探して削除　ユーザー名も残さない
             comment_list[i].closest("yt-live-chat-text-message-renderer").remove();
         }
     }
 }
 
-let ngword = "アーカイブ"
+let ngword_list = ["アーカイブ", "グラ"];
+let ngwords =  ngword_list.join("|");
 erase_ng_comment(get_comment_list());
