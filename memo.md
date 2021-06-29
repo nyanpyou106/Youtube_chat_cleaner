@@ -25,3 +25,7 @@ chrome.action.onClickedはどうも拡張機能のアイコンが押された時
 
 HTMLタグの親要素や祖先要素を取得する。  
 [【Javascript】親要素や祖先要素を取得する方法 parentNode/closest](https://yuyauver98.me/js-parentnode-closest/)
+
+erase_ng_commentは拡張機能の適応時のみ実行したい。  
+mutateで更新を検出した時は、検出したコメント1個ずつにNGワード検出処理をしたい。いちいち更新のたびにコメント欄  
+全取得してたら無駄だから。

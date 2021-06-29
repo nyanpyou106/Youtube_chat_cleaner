@@ -49,6 +49,31 @@ function erase_ng_comment(comment_list) {
     }
 }
 
+function mutate_chat() {
+    let chatFrame = document.getElementById('chatframe');
+    const chatFrameDocument = chatFrame.contentWindow.document;
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            // 何かしたいこと
+            console.log(mutation);
+            erase_ng_comment(get_comment_list());
+
+        });
+    });
+    
+    // オブザーバの設定
+    const config = {
+        characterData: true,
+        subtree: true
+    };
+    
+    // 対象ノードとオブザーバの設定を渡す
+    observer.observe(chatFrameDocument, config);
+}
+
 let ngword_list = ["アーカイブ", "グラ"];
 let ngwords =  ngword_list.join("|");
-erase_ng_comment(get_comment_list());
+// erase_ng_comment(get_comment_list());
+
+mutate_chat();
