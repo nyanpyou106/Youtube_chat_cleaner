@@ -1,12 +1,13 @@
 {
-  "name": "Youtube Chat Cleaner",
-  "description": "Remove spam chats",
-  "version": "1.0",
-  "manifest_version": 3,
-  "content_scripts": [
-    {
-      "matches": ["https://youtube.com/*"],
-      "js": ["contentScript.js"]
-    }
-  ]
+    "name": "Youtube Chat Cleaner",
+    "description": "Remove spam chats",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background": 
+      {
+        "matches": ["https://www.youtube.com/watch*", "https://www.google.com/"],
+        "service_worker": "background.js"
+      }, 
+    "permissions": ["activeTab", "scripting"],
+    "action": {}
 }
