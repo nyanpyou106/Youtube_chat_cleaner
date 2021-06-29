@@ -15,3 +15,13 @@ content_scriptsのmatchesにおける正規表現
 
 公式のサンプル集
 https://github.com/GoogleChrome/chrome-extensions-samples
+
+
+chrome.action.onClickedはどうも拡張機能のアイコンが押された時を指しているっぽい。
+
+ボタンを押す代わりに、勝手に実行してくれるようにすれば完成？  
+今はすべてのコメントを「歪みねぇな」に変えるようにしているが、特定の文字列を含むコメントだけを  
+変更するようにすればよい。  
+
+HTMLタグの親要素や祖先要素を取得する。  
+[【Javascript】親要素や祖先要素を取得する方法 parentNode/closest](https://yuyauver98.me/js-parentnode-closest/)

@@ -5,7 +5,7 @@
     "manifest_version": 3,
     "background": 
       {
-        "matches": ["https://www.youtube.com/watch*", "https://www.google.com/"],
+        "matches": ["https://www.youtube.com/watch*"],
         "service_worker": "background.js"
       }, 
     "permissions": ["activeTab", "scripting"],
