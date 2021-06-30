@@ -39,7 +39,8 @@ function rewrite_ng_comment(comment_list) {
     }
 }
 
-function erase_ng_comment(comment_list) {
+function erase_loaded_ng_comment(comment_list) {
+    // 読み込み済みのコメントのうち、NGワード入りのものを削除
     for (let i=0; i < comment_list.length; i++) {
         let comment =  comment_list[i].innerHTML
         if (comment.match(ngwords)) {
@@ -49,31 +50,44 @@ function erase_ng_comment(comment_list) {
     }
 }
 
-function mutate_chat() {
+function mutate_and_erase_ng_comment() {
+    // コメント欄が更新される度、NGワード入りか判定して削除
+    // iframeのコメント欄を読み込み
     let chatFrame = document.getElementById('chatframe');
     const chatFrameDocument = chatFrame.contentWindow.document;
 
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-            // 何かしたいこと
-            console.log(mutation);
-            erase_ng_comment(get_comment_list());
-
+            // 更新された時に実行する処理
+            if (mutation.target.id==="message" && !mutation.target.classList.contains("censored")){
+                let comment =  mutation.target.innerHTML
+                if (comment.match(ngwords)) {
+                    mutation.target.closest("yt-live-chat-text-message-renderer").remove();
+                    // コメントを書き換えたいときは、無限ループ防止のため、処理済みを識別するクラスを追加
+                    //mutation.target.classList.add("censored");
+                }
+            }
         });
     });
     
-    // オブザーバの設定
     const config = {
         characterData: true,
+        childList: true, 
         subtree: true
     };
     
-    // 対象ノードとオブザーバの設定を渡す
     observer.observe(chatFrameDocument, config);
 }
 
-let ngword_list = ["アーカイブ", "グラ"];
-let ngwords =  ngword_list.join("|");
-// erase_ng_comment(get_comment_list());
+// 記憶領域からoptionで決めた設定を読み込む
+chrome.storage.local.get(["ngword"], (ngwords) => {
+    console.log(ngwords);
+    //ngword_list = ngwords; 
+    //let ngwords =  ngword_list.join("|");
+});
 
-mutate_chat();
+let ngword_list = ["アーカイブ", "グラ", "お"];
+let ngwords =  ngword_list.join("|");
+
+//console.log(ngword_list);
+mutate_and_erase_ng_comment()

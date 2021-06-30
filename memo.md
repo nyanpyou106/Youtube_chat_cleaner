@@ -1,8 +1,9 @@
-#やりたいこと
+# やりたいこと
 - メンバー限定でフィルタリングできる機能もあると便利。　ユーザー指定、ワード指定。消したコメントは消したことがわからないようにする。  
 
+# メモ
 Youtubeのコメント欄はiframeらしい？  
-参考になる？https://qiita.com/teahat/items/052a91d69b63b6d7de0c
+作成の参考[https://qiita.com/teahat/items/052a91d69b63b6d7de0c](https://qiita.com/teahat/items/052a91d69b63b6d7de0c)
 
 content_scriptsのmatchesにおける正規表現  
 [Match patterns](https://developer.chrome.com/docs/extensions/mv3/match_patterns/)
@@ -17,7 +18,9 @@ content_scriptsのmatchesにおける正規表現
 https://github.com/GoogleChrome/chrome-extensions-samples
 
 
-chrome.action.onClickedはどうも拡張機能のアイコンが押された時を指しているっぽい。
+chrome.action.onClickedはどうも拡張機能のアイコンが押された時を指しているっぽい。  
+拡張機能のアイコンを押した時にスクリプトを実行するようにするには、chrome.scriptingを使う。  
+https://developer.chrome.com/docs/extensions/reference/scripting/
 
 ボタンを押す代わりに、勝手に実行してくれるようにすれば完成？  
 今はすべてのコメントを「歪みねぇな」に変えるようにしているが、特定の文字列を含むコメントだけを  
@@ -28,4 +31,35 @@ HTMLタグの親要素や祖先要素を取得する。
 
 erase_ng_commentは拡張機能の適応時のみ実行したい。  
 mutateで更新を検出した時は、検出したコメント1個ずつにNGワード検出処理をしたい。いちいち更新のたびにコメント欄  
-全取得してたら無駄だから。
+全取得してたら無駄だから。  
+mutation.target.id==="message"でコメントの要素を抜き出すことができる。  
+<span id="message" dir="auto" class="style-scope yt-live-chat-text-message-renderer">苗だけで普通に育つうん？</span>  
+の部分。  
+これのコメントを書き換えたい場合は、その書き換え行為もMutationObsevererが拾ってしまって無限ループになるので、  
+適当に処理済みであることを識別するためのclassを追加して弾く必要あり。  
+丸ごと消す場合は問題ない。  
+
+まずはNGワードをポップアップから設定できるようにする。  
+options.jsはoptions.htmlを開いたときにしか実行されない(当たり前だけど)  
+オプションじゃなくてpopupにするのは？　アイコンを押したら設定画面が開いて、  
+設定をした後にボタンを押したら実行開始。
+
+
+popup.jsのconsole.log()を書いてもコンソールに出力されず、変数の確認ができない。  
+今メインで開いている画面とは別の画面(popup.html)で動作しているものだから開発者ツールのコンソールに表示されない？
+
+addEventListener("click", async () => {  
+と書かないと動かないっぽいが、なぜそうなのか理由は不明。　チュートリアルに書いてあるのをそのまま真似した。  
+現在のtabのIDを取得する際はawaitをつける必要あり。  
+とりあえずチュートリアルを真似して、popupのボタンを押したらスクリプトが実行するようになった。
+
+# 設計
+- 必要な機能
+    - コメントにNGワードを設定する
+    - NGユーザーを指定する
+        - ユーザー名にNGワードを設定する　多分コメントと全く同様の判定システムでOK
+    - NGに該当するコメントを完全に削除する
+    - NGに該当するコメントを「このメッセージは不適切な表現を含んでいます」に変更する
+    - 完全削除かマスクかは選べるようにする
+    - コメントのフィルターを設定する(スパナ付きのみ表示、メンバーのみ表示)
+        - これは余裕があれば追加する機能
