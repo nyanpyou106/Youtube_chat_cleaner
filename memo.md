@@ -51,7 +51,13 @@ popup.jsのconsole.log()を書いてもコンソールに出力されず、変�
 addEventListener("click", async () => {  
 と書かないと動かないっぽいが、なぜそうなのか理由は不明。　チュートリアルに書いてあるのをそのまま真似した。  
 現在のtabのIDを取得する際はawaitをつける必要あり。  
-とりあえずチュートリアルを真似して、popupのボタンを押したらスクリプトが実行するようになった。
+とりあえずチュートリアルを真似して、popupのボタンを押したらスクリプトが実行するようになった。  
+
+chrome.storage.local.get(["ngword"], (key_value) => {})でコールバック関数に渡されるのは  
+key_valueの形なので、わざわざkey_value.ngwordとしてvalueを取り出さないといけない。
+
+textareaで入力された値から空白削除する方法  
+https://www.nishishi.com/javascript-tips/trim-space-chars.html
 
 # 設計
 - 必要な機能

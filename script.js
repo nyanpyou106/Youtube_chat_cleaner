@@ -79,15 +79,18 @@ function mutate_and_erase_ng_comment() {
     observer.observe(chatFrameDocument, config);
 }
 
+console.log("Extention Start");
+
+let ngwords = "";
 // 記憶領域からoptionで決めた設定を読み込む
-chrome.storage.local.get(["ngword"], (ngwords) => {
-    console.log(ngwords);
-    //ngword_list = ngwords; 
-    //let ngwords =  ngword_list.join("|");
+chrome.storage.local.get(["ngword"], (key_value) => {
+    let ngword_list = key_value.ngword.split("\n");
+    // |で結合後空白を削除
+    ngwords =  ngword_list.join("|").replace(/\s+/g, "");
+    // 末尾が|になると全てNGワードになってしまうので修正
+    if (ngwords.slice(-1)==="|") {
+        ngwords = ngwords.slice(0, -1);
+    }
 });
 
-let ngword_list = ["アーカイブ", "グラ", "お"];
-let ngwords =  ngword_list.join("|");
-
-//console.log(ngword_list);
 mutate_and_erase_ng_comment()
