@@ -81,8 +81,9 @@ function mutate_and_erase_ng_comment() {
 
 console.log("Extention Start");
 
-let ngwords = "";
+var ngwords = "";
 // 記憶領域からoptionで決めた設定を読み込む
+//NGワードの読み込み
 chrome.storage.local.get(["ngword"], (key_value) => {
     let ngword_list = key_value.ngword.split("\n");
     // |で結合後空白を削除
