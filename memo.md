@@ -82,8 +82,20 @@ chrome.storage.local.get(["ngword"], (key_value) => {})
 の値を更新することが出来ないっぽいことが判明した。  
 仕方が無いのでこのコールバック内で全ての処理を完結させるように変更。
 
+メンバーバッジの表示部分は以下のようになっている
+```html
+<div id="image" class="style-scope yt-live-chat-author-badge-renderer"><img src="https://yt3.ggpht.com/e43lm5wGp4sHf2F9z-0-e43wIDLZhoESpbxopKlsbBIRycYMYi69p4dAqrEATabpuRKz2f9WAg=s16-c-k" class="style-scope yt-live-chat-author-badge-renderer" alt="Member (2 months)"></div>
+```
+alt部分はYoutubeの言語設定によって変わる。日本語の場合はメンバー(2 か月)みたいになる。  
+comment_structure.mdにより詳細な構成を記載。  
+span id="chat-badges"下にあるyt-live-chat-author-badge-rendererのtypeを参照すれば、  
+メンバーとモデレーターを識別できそう。  
+メンバーの場合はtype="member"、モデレーターの場合はtype="moderator"となっている。  
+
+mutationからtype要素を取り出す方法は？
+
 # 設計
-- 必要な機能
+- 必要な機能x
     - コメントにNGワードを設定する
     - NGユーザーを指定する
         - ユーザー名にNGワードを設定する　多分コメントと全く同様の判定システムでOK
