@@ -57,7 +57,30 @@ chrome.storage.local.get(["ngword"], (key_value) => {})でコールバック関�
 key_valueの形なので、わざわざkey_value.ngwordとしてvalueを取り出さないといけない。
 
 textareaで入力された値から空白削除する方法  
-https://www.nishishi.com/javascript-tips/trim-space-chars.html
+https://www.nishishi.com/javascript-tips/trim-space-chars.html  
+
+全部消すとたくさん消えた場合に見た目が良くない　チャット欄が空白だらけになる  
+チャットを非表示→再表示させると拡張が止まる  
+削除や編集をしたときにカクカクするし、大量にNGワードにヒットするとコメントがフリーズする  
+絵文字をどうやって防ぐか→別の欄を作ればOK？
+
+絵文字はspan id="message"の下のimgタグで表現されていて、emoji classが割り当てられているみたい 
+```html
+<span id="message" dir="auto" class="style-scope yt-live-chat-text-message-renderer"><img class="emoji yt-formatted-string style-scope yt-live-chat-text-message-renderer" src="https://www.youtube.com/s/gaming/emoji/7ff574f2/emoji_u1f929.svg" alt="🤩" shared-tooltip-text=":star_struck:" id="emoji-33"></span>
+```
+
+どうもjavascriptはコードを書いた順番通りに実行するわけではないらしい  
+変数に特定の値を読み込んでから次の処理に行きたいのに、読み込む前に処理に入ったりする。  
+javascriptの実行順について  
+[コールバック地獄からの脱出](https://qiita.com/umeko2015/items/2fdb2785eac8f4117f23)
+
+色々試してみた結果
+```javascript
+chrome.storage.local.get(["ngword"], (key_value) => {})
+```
+のコールバック内からは、グローバル変数のようなchrome.storage.local.get()の外にある変数  
+の値を更新することが出来ないっぽいことが判明した。  
+仕方が無いのでこのコールバック内で全ての処理を完結させるように変更。
 
 # 設計
 - 必要な機能
@@ -71,3 +94,4 @@ https://www.nishishi.com/javascript-tips/trim-space-chars.html
         - これは余裕があれば追加する機能
     - NGワードの追加を何回でも行える機能
     - popup.htmlに書き込んだNGワードを保存する機能(内部的には保存してるけど今は閉じると見えない)
+    - 動作中かどうかが分かるようにしたい
