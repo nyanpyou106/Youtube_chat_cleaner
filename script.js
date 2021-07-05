@@ -43,12 +43,9 @@ function mutate_and_edit_ng_comment(ngwords, chatframedocument, selector) {
 }
 
 function clean_ng_comment() {
-    console.log("Extention Start");
-
     // iframeのチャット欄の読み込み
     let chatFrame = document.getElementById('chatframe');
     let chatFrameDocument = chatFrame.contentWindow.document;
-
     // ストレージに保存しておいたNGワードの取得
     chrome.storage.local.get(["ngword"], (key_value) => {
         let ngword_list = key_value.ngword.split("\n");
@@ -58,11 +55,39 @@ function clean_ng_comment() {
         if (NGWORDS.slice(-1)==="|") {
             NGWORDS = NGWORDS.slice(0, -1);
         }
-
         // 削除の実行
         erase_loaded_ng_comment(NGWORDS, get_loaded_comment_list(chatFrameDocument));
         mutate_and_edit_ng_comment(NGWORDS, chatFrameDocument, "erase");
     });
+}
+
+function member_and_moderator_only() {
+    // iframeのチャット欄の読み込み
+    let chatFrame = document.getElementById('chatframe');
+    let chatFrameDocument = chatFrame.contentWindow.document;
+    let comments_for_mutation = chatFrameDocument.querySelector("#item-offset > #items");
+    console.log(comments_for_mutation);
+    // コメント欄が更新された時、それがメンバー以外の投稿の場合削除する
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            // 更新された時に実行する処理
+            //console.log(mutations);
+            //console.log(mutation["target"]);
+            let classlist = mutation.target.classList;    
+            if (classlist !== undefined && classlist.contains("yt-live-chat-item-list-renderer")) {
+                console.log(mutation.target.querySelector("yt-live-chat-text-message-renderer"));
+                //console.log(mutation.target.getAttribute("author-type"));
+            }
+        });
+    });
+    
+    const config = {
+        characterData: true,
+        childList: true, 
+        subtree: true
+    };
+    
+    observer.observe(comments_for_mutation, config);
 }
 
 function member_only() {
@@ -73,19 +98,12 @@ function member_only() {
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             // 更新された時に実行する処理
-            console.log(mutation.type);
-            /*
-            if (mutation.target.id==="chat-badges"){
-                let comment =  mutation.target.innerHTML
-                if (comment.match(ngwords)&&selector=="erase") {
+            let classlist = mutation.target.classList; 
+            if (classlist !== undefined && classlist.contains("yt-live-chat-author-badge-renderer")) {
+                if (mutation.target.parentElement.getAttribute("type") !== "member") {
                     mutation.target.closest("yt-live-chat-text-message-renderer").remove();
-                } else if (comment.match(ngwords)&&selector=="replace") {
-                    mutation.target.innerHTML="";
-                    // コメントを書き換えたいときは、無限ループ防止のため、処理済みを識別するクラスを追加
-                    mutation.target.classList.add("censored");
                 }
             }
-            */
         });
     });
     
@@ -97,5 +115,8 @@ function member_only() {
     
     observer.observe(chatFrameDocument, config);
 }
+
+
+console.log("Extention Start");
 //clean_ng_comment();
-member_only();
+member_and_moderator_only();

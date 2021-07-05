@@ -118,8 +118,30 @@ span id="chat-badges"下にあるyt-live-chat-author-badge-rendererのtypeを参
 メンバーとモデレーターを識別できそう。  
 メンバーの場合はtype="member"、モデレーターの場合はtype="moderator"となっている。  
 
-mutationからtype要素を取り出す方法は？
+mutationからtype要素を取り出す方法は？  
+targetでまずyt-live-chat-author-badge-rendererを探す  
+その後attributes.type.valueでmemberか判定？  
 
+まずtargetのclasslistにyt-live-chat-author-badge-rendererがあるか探し、その後親のtypeにmemberがあるか調べるのが良さそう。  
+1発でtypeが書いてある場所を特定する方法が見つからなかった。  
+
+というかyt-live-chat-author-badge-rendererを調べるだけでいい説ある。  メンバーかモデレーターしかこのclassの書かれた要素を持たない。  
+
+yt-live-chat-item-list-rendererタグにauthor-typeの記述あり　ここにもmemberかmoderatorが書かれている。  
+但しmoderatorかつmemberの場合はmoderatorの記述が優先されるっぽい。  
+
+今までid=chatframe全体を監視していたが、これだとコメントを削除するときに要素の特定がしづらいことがわかったため、  
+より狭い範囲をmutationobsevererに監視させるようにする。  
+具体的には、
+コメント(<yt-live-chat-text-message-renderer></yt-live-chat-text-message-renderer>)の親要素である
+```html
+<div id="items" class="style-scope yt-live-chat-item-list-renderer" style="transform: translateY(0px);"></div>
+```
+を監視させる。
+但し、id="items"はなぜか2つ存在するので、querySelector("#item-offset > #items")とすることで、コメント欄のitemsを指定する。  
+(もう1つのitemsはコメント欄上部のピン止めコメントに設定されている)
+
+# デバッグ法
 [【chrome extensions】Google Chrome拡張機能の作り方② - デバッグの方法(console.log)](https://www.tweeeety.blog/entry/2015/03/04/231354)
 
 # 設計
