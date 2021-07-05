@@ -1,7 +1,7 @@
 let execute_extention_button = document.getElementById("execute_extention_button");
 let input_ngwords_element = document.getElementById("input_ngwords");
 
-// 既にNGワードが設定されていたら、それをtextareaに読み込む
+// 既にNGワードがchoromeのstorageに設定されていたら、それをtextareaに読み込む
 chrome.storage.local.get(["ngword"], (key_value) => {
     if (key_value.ngword!==undefined) {
         input_ngwords_element.value = key_value.ngword;

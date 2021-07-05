@@ -97,7 +97,5 @@ function member_only() {
     
     observer.observe(chatFrameDocument, config);
 }
-
-
 //clean_ng_comment();
 member_only();

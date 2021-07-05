@@ -52,6 +52,32 @@ addEventListener("click", async () => {
 と書かないと動かないっぽいが、なぜそうなのか理由は不明。　チュートリアルに書いてあるのをそのまま真似した。  
 現在のtabのIDを取得する際はawaitをつける必要あり。  
 とりあえずチュートリアルを真似して、popupのボタンを押したらスクリプトが実行するようになった。  
+そもそも
+```javascript
+async function getCurrentTab() {
+  let queryOptions = { active: true, currentWindow: true };
+  let [tab] = await chrome.tabs.query(queryOptions);
+  return tab;
+}
+```
+のtabについている[]の意味も分からない。  
+同じ公式ドキュメントでも場所によって[]ついてなかったりするので本当に不明。   
+例えばこのページ(https://developer.chrome.com/docs/extensions/mv3/promises/#using-asyncawait)   
+chrome.tabs.query(queryOptions)の返り値としては大きさ1の配列が返ってきていた。でその中にタブの番号などの情報が色々入っている。  
+```javascript
+let [tab] = await chrome.tabs.query(queryOptions);
+tab.id
+```
+と
+```javascript
+let tab = await chrome.tabs.query(queryOptions);
+tab[0].id
+```
+は同じ結果になった。  
+なんとなくはわかったけどどういう挙動をしてるのかはっきり言葉で表せない。
+
+chrome.tab APIはpopupかbackgroundのスクリプトでしか使えないらしい  
+[Cannot read property 'query' of undefined - In Vanilla Chrome Extension [duplicate]](https://stackoverflow.com/questions/62461559/cannot-read-property-query-of-undefined-in-vanilla-chrome-extension)
 
 chrome.storage.local.get(["ngword"], (key_value) => {})でコールバック関数に渡されるのは  
 key_valueの形なので、わざわざkey_value.ngwordとしてvalueを取り出さないといけない。
@@ -94,8 +120,10 @@ span id="chat-badges"下にあるyt-live-chat-author-badge-rendererのtypeを参
 
 mutationからtype要素を取り出す方法は？
 
+[【chrome extensions】Google Chrome拡張機能の作り方② - デバッグの方法(console.log)](https://www.tweeeety.blog/entry/2015/03/04/231354)
+
 # 設計
-- 必要な機能x
+- 必要な機能
     - コメントにNGワードを設定する
     - NGユーザーを指定する
         - ユーザー名にNGワードを設定する　多分コメントと全く同様の判定システムでOK
