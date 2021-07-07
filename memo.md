@@ -3,7 +3,6 @@
 
 # メモ
 Youtubeのコメント欄はiframeらしい？  
-作成の参考[https://qiita.com/teahat/items/052a91d69b63b6d7de0c](https://qiita.com/teahat/items/052a91d69b63b6d7de0c)
 
 content_scriptsのmatchesにおける正規表現  
 [Match patterns](https://developer.chrome.com/docs/extensions/mv3/match_patterns/)
@@ -140,6 +139,14 @@ yt-live-chat-item-list-rendererタグにauthor-typeの記述あり　ここに�
 を監視させる。
 但し、id="items"はなぜか2つ存在するので、querySelector("#item-offset > #items")とすることで、コメント欄のitemsを指定する。  
 (もう1つのitemsはコメント欄上部のピン止めコメントに設定されている)
+
+
+# 参考記事
+[Chrome拡張の開発方法まとめ　その1：概念編](https://qiita.com/k7a/items/26d7a22233ecdf48fed8)  
+[YouTubeLiveのチャットを言語解析してDeepLによる翻訳結果に置換するChrome拡張機能を作った](https://qiita.com/teahat/items/052a91d69b63b6d7de0c)  
+[Youtube用chrome拡張作ってハマったとこ](https://shacchin.github.io/shacchinlog/2019/01/21/20190121/)  
+[shacchin/youtube_chat_pinner](https://github.com/shacchin/youtube_chat_pinner/blob/master/src/ts/contentscript.ts)
+
 
 # デバッグ法
 [【chrome extensions】Google Chrome拡張機能の作り方② - デバッグの方法(console.log)](https://www.tweeeety.blog/entry/2015/03/04/231354)
